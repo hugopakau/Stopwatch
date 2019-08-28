@@ -12,6 +12,8 @@ public class MainActivity extends Activity {
 
     private long base;
     private boolean started;
+    private long stopMillis;
+    private long initialBase;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -25,9 +27,13 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (started) {
-                    chronometer.setBase(base);
+                    long elapsedRealtime = SystemClock.elapsedRealtime();
+                    long startMillis = elapsedRealtime - (elapsedRealtime - stopMillis);
+                    long newBase = initialBase + (startMillis - stopMillis);
+                    chronometer.setBase(newBase);
                 } else {
-                    chronometer.setBase(SystemClock.elapsedRealtime());
+                    initialBase = SystemClock.elapsedRealtime();
+                    chronometer.setBase(initialBase);
                 }
                 chronometer.start();
                 started = true;
@@ -38,9 +44,7 @@ public class MainActivity extends Activity {
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long b = chronometer.getBase();
-                base = b + (SystemClock.elapsedRealtime() - b);
-
+                stopMillis = SystemClock.elapsedRealtime();
                 chronometer.stop();
             }
         });

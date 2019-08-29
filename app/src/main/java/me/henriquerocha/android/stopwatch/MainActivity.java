@@ -48,5 +48,14 @@ public class MainActivity extends Activity {
                 chronometer.stop();
             }
         });
+
+        Button resetButton = findViewById(R.id.resetButton);
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initialBase = SystemClock.elapsedRealtime();
+                chronometer.setBase(initialBase);
+            }
+        });
     }
 }
